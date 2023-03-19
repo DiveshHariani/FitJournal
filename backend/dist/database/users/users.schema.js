@@ -3,7 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const userSchema = new mongoose_1.Schema({
     "name": String,
-    "email": String,
+    "password": { type: String, required: false },
+    "isGoogleAuth": { type: Boolean, default: false },
+    "email": { type: String, unique: true },
     "age": Number,
     "height": Number,
     "weight": Number,

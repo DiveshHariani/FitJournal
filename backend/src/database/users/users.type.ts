@@ -1,10 +1,12 @@
 export interface IUser {
     "name": String,
+    "password"?: String,
+    "isGoogleAuth"?: Boolean,
     "email": String,
-    "age": Number,
-    "height": Number,
-    "weight": Number,
-    "workout": [{
+    "age"?: Number,
+    "height"?: Number,
+    "weight"?: Number,
+    "workout"?: [{
         "name": String,
         "date": Date,
         "exercises": [

@@ -2,7 +2,9 @@ import { Schema } from "mongoose";
 
 const userSchema = new Schema({
     "name": String,
-    "email": String,
+    "password": {type: String, required: false},
+    "isGoogleAuth": {type: Boolean, default: false},
+    "email": {type: String, unique: true},
     "age": Number,
     "height": Number,
     "weight": Number,
