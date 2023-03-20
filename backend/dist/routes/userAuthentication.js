@@ -16,39 +16,22 @@ const express_1 = __importDefault(require("express"));
 const users_model_1 = __importDefault(require("../database/users/users.model"));
 const hashing_1 = require("../utils/hashing");
 let router = express_1.default.Router();
-router.get('/userLogin', (req, res) => {
-    console.log("User Login activities");
-    let loginData = {
-        "name": "Divesh",
-        "password": "abcdef",
-        "email": 'divesh@gmail.com',
-        "age": 21,
-        "height": 174,
-        "weight": 78,
-        "workout": [{
-                "name": "Push",
-                "date": new Date(),
-                "exercises": [
-                    {
-                        "exercise_name": "Chest Press",
-                        "sets": [{
-                                "weight_lifted": 12,
-                                "number_of_reps": 12
-                            }]
-                    }
-                ]
-            }]
-    };
-    let user = new users_model_1.default(loginData);
-    user.save()
-        .then((result) => {
-        console.log("Data Saved Successfully");
-        res.send("User has been logged in");
-    })
-        .catch((err) => {
-        console.log(err);
-        res.send("Unsuccessfull login");
-    });
+router.post('/userLogin', (req, res) => {
+    let { email, password } = req.body;
+    users_model_1.default.findOne({ email: email }, { password: 1 })
+        .then((result_hash) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log(result_hash);
+        if (result_hash !== undefined) {
+            console.log(result_hash === null || result_hash === void 0 ? void 0 : result_hash.password, password);
+            let compareResult = yield (0, hashing_1.checkPassword)(password, result_hash === null || result_hash === void 0 ? void 0 : result_hash.password);
+            console.log(compareResult);
+            if (compareResult === true)
+                res.send("Logged in successfully");
+            else
+                res.send("Incorrect");
+        }
+    }))
+        .catch((err) => res.send(err));
 });
 /*
     METHOD: POST

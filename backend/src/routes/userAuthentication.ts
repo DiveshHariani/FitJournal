@@ -5,41 +5,20 @@ import {createHash, checkPassword} from '../utils/hashing';
 
 let router = express.Router();
 
-router.get('/userLogin', (req: Request, res: Response) => {
-    console.log("User Login activities");
-    let loginData: IUser = {
-        "name": "Divesh",
-        "password": "abcdef",
-        "email": 'divesh@gmail.com',
-        "age": 21,
-        "height": 174,
-        "weight": 78,
-        "workout": [{
-            "name": "Push",
-            "date": new Date(),
-            "exercises": [
-                {
-                    "exercise_name": "Chest Press",
-                    "sets": [{
-                        "weight_lifted": 12,
-                        "number_of_reps": 12
-                    }]
-                }
-            ]
-        }]
-    }
-
-    let user = new UserModel(loginData)
-    user.save()
-        .then((result) => {
-            console.log("Data Saved Successfully");
-            res.send("User has been logged in");
-        })
-        .catch((err) => {
-            console.log(err);
-            res.send("Unsuccessfull login");
-        });
-
+router.post('/userLogin', (req: Request, res: Response) => {
+    let { email, password } = req.body;
+    UserModel.findOne({email: email}, {password : 1})
+    .then(async (result_hash) => {
+        console.log(result_hash);
+        if(result_hash !== undefined) {
+            console.log(result_hash?.password, password);
+            let compareResult = await checkPassword(password, result_hash?.password as string);
+            console.log(compareResult);
+            if(compareResult === true)  res.send("Logged in successfully");
+            else res.send("Incorrect");
+        }
+    })
+    .catch((err) => res.send(err));
     
 });
 
