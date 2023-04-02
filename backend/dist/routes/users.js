@@ -58,24 +58,56 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
  */
 router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let userId = req.params.id;
-    res.send(userId);
+    try {
+        let user = yield users_model_1.default.findOne({ email: userId });
+        res.send(user);
+    }
+    catch (err) {
+        res.send(err.message);
+    }
 }));
 /**
  * METHOD: PUT /:id
  * PURPOSE: Change the user details(full object) with id
  */
 router.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let userId = req.params.id;
+        let updatedData = req.body;
+        const result = yield users_model_1.default.updateOne({ email: userId }, updatedData, { new: true });
+        res.send(result);
+    }
+    catch (err) {
+        res.send(err.message);
+    }
 }));
 /**
  * METHOD: PATCH /:id
  * PURPOSE: Update field(s) for the user with id
  */
 router.patch('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let userId = req.params.id;
+        let updatedData = req.body;
+        const result = yield users_model_1.default.updateOne({ email: userId }, updatedData, { new: true });
+        res.send(result);
+    }
+    catch (err) {
+        res.send(err.message);
+    }
 }));
 /**
  * METHOD: DELETE /:id
  * PURPOSE: Delete a user with id
  */
 router.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let userId = req.params.id;
+        let result = yield users_model_1.default.deleteOne({ email: userId });
+        res.send("Data Deleted");
+    }
+    catch (err) {
+        res.send(err.message);
+    }
 }));
 exports.default = router;

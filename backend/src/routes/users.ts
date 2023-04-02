@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
  * PURPOSE: Create a user.
  */
 router.post('/', async (req, res) => {
-    let {name, email, password, isGoogleAuth} = req.body;
+    let { name, email, password, isGoogleAuth } = req.body;
     try {
         let hash: string = await createHash(password);
 
@@ -49,7 +49,13 @@ router.post('/', async (req, res) => {
  */
 router.get('/:id', async (req, res) => {
     let userId = req.params.id;
-    res.send(userId);
+    try {
+        let user: IUser | null = await UserModel.findOne({email: userId});
+        res.send(user);
+    } catch(err) {
+        res.send(err.message);
+    }
+
 })
 
 /**
@@ -57,7 +63,15 @@ router.get('/:id', async (req, res) => {
  * PURPOSE: Change the user details(full object) with id
  */
 router.put('/:id', async (req, res) => {
+    try {
+        let userId: string = req.params.id;
+        let updatedData: IUser = req.body;
 
+        const result = await UserModel.updateOne({email: userId}, updatedData, {new: true});
+        res.send(result);
+    } catch(err) {
+        res.send(err.message)
+    }
 })
 
 /**
@@ -65,7 +79,15 @@ router.put('/:id', async (req, res) => {
  * PURPOSE: Update field(s) for the user with id
  */
 router.patch('/:id', async (req, res) => {
+    try {
+        let userId: string = req.params.id;
+        let updatedData = req.body;
 
+        const result = await UserModel.updateOne({email: userId}, updatedData, {new: true});
+        res.send(result);
+    } catch(err) {
+        res.send(err.message)
+    }
 });
 
 /**
@@ -73,7 +95,13 @@ router.patch('/:id', async (req, res) => {
  * PURPOSE: Delete a user with id
  */
 router.delete('/:id', async (req, res) => {
-
+    try {
+        let userId = req.params.id;
+        let result = await UserModel.deleteOne({email: userId});
+        res.send("Data Deleted")
+    } catch(err) {
+        res.send(err.message);
+    }
 });
 
 export default router;
