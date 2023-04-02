@@ -8,6 +8,8 @@ import bodyParser from 'body-parser';
 import UserLoginService from "./routes/userAuthentication";
 import UserAPI from "./routes/users";
 
+import auth from "./middleware/auth";
+
 const app = express();
 app.use(express.json());
 
@@ -16,6 +18,11 @@ connect();
 app.use('/user', UserLoginService);
 
 app.use('/user-api', UserAPI);
+
+app.use('/', auth, (req: Request, res: Response) => {
+    console.log(req.body);
+    res.json({"message": "reached URL /"});
+})
 
 app.use((req, res) => {
     res.status(400).send("URL not found" + req);

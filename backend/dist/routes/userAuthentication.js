@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const users_model_1 = __importDefault(require("../database/users/users.model"));
 const hashing_1 = require("../utils/hashing");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 let router = express_1.default.Router();
 /*
     TODO:
@@ -31,11 +32,17 @@ router.post('/userLogin', (req, res) => {
         .then((result_hash) => __awaiter(void 0, void 0, void 0, function* () {
         console.log(result_hash);
         if (result_hash !== undefined) {
-            console.log(result_hash === null || result_hash === void 0 ? void 0 : result_hash.password, password);
             let compareResult = yield (0, hashing_1.checkPassword)(password, result_hash === null || result_hash === void 0 ? void 0 : result_hash.password);
-            console.log(compareResult);
-            if (compareResult === true)
-                res.send("Logged in successfully");
+            if (compareResult === true) {
+                console.log("Token: ", process.env.JWT_TOKEN);
+                if (process.env.JWT_TOKEN !== undefined) {
+                    let token = jsonwebtoken_1.default.sign({ user_id: result_hash === null || result_hash === void 0 ? void 0 : result_hash._id, email: email }, process.env.JWT_TOKEN);
+                    res.send({ "message": "Login successful", "token": token });
+                }
+                else {
+                    res.status(500).json({ "Message": "Internal Server Error" });
+                }
+            }
             else
                 res.send("Incorrect");
         }

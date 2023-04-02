@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import IUser from "../database/users/users.type";
 import UserModel from '../database/users/users.model';
 import {createHash, checkPassword} from '../utils/hashing';
+import jwt from 'jsonwebtoken';
 
 let router = express.Router();
 
@@ -21,10 +22,16 @@ router.post('/userLogin', (req: Request, res: Response) => {
     .then(async (result_hash) => {
         console.log(result_hash);
         if(result_hash !== undefined) {
-            console.log(result_hash?.password, password);
             let compareResult = await checkPassword(password, result_hash?.password as string);
-            console.log(compareResult);
-            if(compareResult === true)  res.send("Logged in successfully");
+            if(compareResult === true)  {
+                console.log("Token: ", process.env.JWT_TOKEN)
+                if(process.env.JWT_TOKEN !== undefined) {
+                    let token: string = jwt.sign({user_id: result_hash?._id, email: email}, process.env.JWT_TOKEN);
+                    res.send({"message": "Login successful", "token": token});
+                } else {
+                    res.status(500).json({"Message": "Internal Server Error"});
+                }
+            }
             else res.send("Incorrect");
         }
     })
