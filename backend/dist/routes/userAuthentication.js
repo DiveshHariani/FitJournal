@@ -16,6 +16,15 @@ const express_1 = __importDefault(require("express"));
 const users_model_1 = __importDefault(require("../database/users/users.model"));
 const hashing_1 = require("../utils/hashing");
 let router = express_1.default.Router();
+/*
+    TODO:
+        - Create an authenticate middleware that can parse the Content-header to determine the token and check it against user.
+
+*/
+/**
+ * Method: POST
+ * PURPOSE: user login.
+ */
 router.post('/userLogin', (req, res) => {
     let { email, password } = req.body;
     users_model_1.default.findOne({ email: email }, { password: 1 })
@@ -38,7 +47,7 @@ router.post('/userLogin', (req, res) => {
     PURPOSE: user signin
 */
 router.post('/user-signin', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let { name, email, password } = req.body;
+    let { name, email, password, isGoogleAuth } = req.body;
     console.log(req.body);
     try {
         let hash = yield (0, hashing_1.createHash)(password);
@@ -46,7 +55,7 @@ router.post('/user-signin', (req, res) => __awaiter(void 0, void 0, void 0, func
             "name": name,
             "email": email,
             "password": hash,
-            "isGoogleAuth": false
+            "isGoogleAuth": isGoogleAuth
         };
         let newUser = new users_model_1.default(user);
         newUser.save()

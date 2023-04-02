@@ -1,0 +1,79 @@
+import express, { Router } from "express";
+import IUser from "../database/users/users.type";
+import UserModel from "../database/users/users.model";
+import { createHash } from "../utils/hashing";
+
+let router = Router()
+
+/**
+ * METHOD: GET
+ * PURPOSE: sends all the users
+ */
+router.get('/', async (req, res) => {
+    try {
+        let users: IUser[] = await UserModel.find();
+        res.send({'users': users})
+    } catch(err) {
+        res.send(err.message);
+    }
+});
+
+/**
+ * METHOD: POST
+ * PURPOSE: Create a user.
+ */
+router.post('/', async (req, res) => {
+    let {name, email, password, isGoogleAuth} = req.body;
+    try {
+        let hash: string = await createHash(password);
+
+        let user: IUser = {
+            "name": name,
+            "email": email,
+            "password": hash,
+            "isGoogleAuth": isGoogleAuth
+        }
+
+        let newUser = new UserModel(user);
+        newUser.save()
+                .then((response) => res.send("User saved successfully"))
+                .catch((err) => console.log(err));
+    } catch(err) {
+        res.send(err.message);
+    }
+});
+
+/**
+ * METHOD: GET /:id
+ * PURPOSE: Fetch details of user with id
+ */
+router.get('/:id', async (req, res) => {
+    let userId = req.params.id;
+    res.send(userId);
+})
+
+/**
+ * METHOD: PUT /:id
+ * PURPOSE: Change the user details(full object) with id
+ */
+router.put('/:id', async (req, res) => {
+
+})
+
+/**
+ * METHOD: PATCH /:id
+ * PURPOSE: Update field(s) for the user with id
+ */
+router.patch('/:id', async (req, res) => {
+
+});
+
+/**
+ * METHOD: DELETE /:id
+ * PURPOSE: Delete a user with id
+ */
+router.delete('/:id', async (req, res) => {
+
+});
+
+export default router;

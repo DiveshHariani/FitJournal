@@ -5,6 +5,16 @@ import {createHash, checkPassword} from '../utils/hashing';
 
 let router = express.Router();
 
+/*
+    TODO:
+        - Create an authenticate middleware that can parse the Content-header to determine the token and check it against user.
+
+*/
+
+/**
+ * Method: POST
+ * PURPOSE: user login.
+ */
 router.post('/userLogin', (req: Request, res: Response) => {
     let { email, password } = req.body;
     UserModel.findOne({email: email}, {password : 1})
@@ -28,7 +38,7 @@ router.post('/userLogin', (req: Request, res: Response) => {
     PURPOSE: user signin
 */
 router.post('/user-signin', async (req, res) => {
-    let {name, email, password} = req.body;
+    let {name, email, password, isGoogleAuth} = req.body;
     console.log(req.body);
     
     try {
@@ -38,7 +48,7 @@ router.post('/user-signin', async (req, res) => {
             "name": name,
             "email": email,
             "password": hash,
-            "isGoogleAuth": false
+            "isGoogleAuth": isGoogleAuth
         }
 
         let newUser = new UserModel(user);
@@ -55,6 +65,6 @@ router.post('/user-signin', async (req, res) => {
     } catch(err) {
         res.send(err);
     }
-})
+});
 
 export default router;
