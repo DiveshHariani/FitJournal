@@ -1,3 +1,5 @@
+import { IWorkout } from "../workouts/workout.type";
+
 export interface IUser {
     "name": String,
     "password"?: String,
@@ -6,19 +8,7 @@ export interface IUser {
     "age"?: Number,
     "height"?: Number,
     "weight"?: Number,
-    "workout"?: [{
-        "name": String,
-        "date": Date,
-        "exercises": [
-            {
-                "exercise_name": String,
-                "sets": [{
-                    "weight_lifted": Number,
-                    "number_of_reps": Number
-                }]
-            }
-        ]
-    }]
+    "workout": IWorkout[] | []
 };
 
 export default IUser;

@@ -15,12 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const users_model_1 = __importDefault(require("../database/users/users.model"));
 const hashing_1 = require("../utils/hashing");
+const auth_1 = __importDefault(require("../middleware/auth"));
 let router = (0, express_1.Router)();
 /**
  * METHOD: GET
  * PURPOSE: sends all the users
  */
-router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/', [auth_1.default], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let users = yield users_model_1.default.find();
         res.send({ 'users': users });
@@ -41,7 +42,8 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             "name": name,
             "email": email,
             "password": hash,
-            "isGoogleAuth": isGoogleAuth
+            "isGoogleAuth": isGoogleAuth,
+            "workout": []
         };
         let newUser = new users_model_1.default(user);
         newUser.save()
@@ -56,7 +58,8 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
  * METHOD: GET /:id
  * PURPOSE: Fetch details of user with id
  */
-router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/:id', [auth_1.default], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.body);
     let userId = req.params.id;
     try {
         let user = yield users_model_1.default.findOne({ email: userId });

@@ -9,12 +9,14 @@ const express_1 = __importDefault(require("express"));
 const connection_1 = __importDefault(require("./database/connection"));
 const userAuthentication_1 = __importDefault(require("./routes/userAuthentication"));
 const users_1 = __importDefault(require("./routes/users"));
+const workouts_1 = __importDefault(require("./routes/workouts"));
 const auth_1 = __importDefault(require("./middleware/auth"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 (0, connection_1.default)();
 app.use('/user', userAuthentication_1.default);
 app.use('/user-api', users_1.default);
+app.use('/workout', workouts_1.default);
 app.use('/', auth_1.default, (req, res) => {
     console.log(req.body);
     res.json({ "message": "reached URL /" });

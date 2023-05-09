@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
+const workout_schema_1 = __importDefault(require("../workouts/workout.schema"));
 const userSchema = new mongoose_1.Schema({
     "name": String,
     "password": { type: String, required: false },
@@ -9,18 +13,6 @@ const userSchema = new mongoose_1.Schema({
     "age": Number,
     "height": Number,
     "weight": Number,
-    "workout": [{
-            "name": String,
-            "date": Date,
-            "exercises": [
-                {
-                    "exercise_name": String,
-                    "sets": [{
-                            "weight_lifted": Number,
-                            "number_of_reps": Number
-                        }]
-                }
-            ]
-        }]
+    "workout": [workout_schema_1.default]
 });
 exports.default = userSchema;

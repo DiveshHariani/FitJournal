@@ -62,7 +62,8 @@ router.post('/user-signin', (req, res) => __awaiter(void 0, void 0, void 0, func
             "name": name,
             "email": email,
             "password": hash,
-            "isGoogleAuth": isGoogleAuth
+            "isGoogleAuth": isGoogleAuth,
+            "workout": []
         };
         let newUser = new users_model_1.default(user);
         newUser.save()

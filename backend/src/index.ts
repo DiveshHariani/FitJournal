@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 
 import UserLoginService from "./routes/userAuthentication";
 import UserAPI from "./routes/users";
+import WorkoutAPI from "./routes/workouts";
 
 import auth from "./middleware/auth";
 
@@ -18,6 +19,8 @@ connect();
 app.use('/user', UserLoginService);
 
 app.use('/user-api', UserAPI);
+
+app.use('/workout', WorkoutAPI);
 
 app.use('/', auth, (req: Request, res: Response) => {
     console.log(req.body);

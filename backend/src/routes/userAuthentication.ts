@@ -55,7 +55,8 @@ router.post('/user-signin', async (req, res) => {
             "name": name,
             "email": email,
             "password": hash,
-            "isGoogleAuth": isGoogleAuth
+            "isGoogleAuth": isGoogleAuth,
+            "workout": []
         }
 
         let newUser = new UserModel(user);

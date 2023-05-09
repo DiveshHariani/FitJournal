@@ -2,6 +2,7 @@ import express, { Router } from "express";
 import IUser from "../database/users/users.type";
 import UserModel from "../database/users/users.model";
 import { createHash } from "../utils/hashing";
+import verifyToken from "../middleware/auth";
 
 let router = Router()
 
@@ -9,7 +10,7 @@ let router = Router()
  * METHOD: GET
  * PURPOSE: sends all the users
  */
-router.get('/', async (req, res) => {
+router.get('/', [verifyToken], async (req: express.Request, res: express.Response) => {
     try {
         let users: IUser[] = await UserModel.find();
         res.send({'users': users})
@@ -22,7 +23,7 @@ router.get('/', async (req, res) => {
  * METHOD: POST
  * PURPOSE: Create a user.
  */
-router.post('/', async (req, res) => {
+router.post('/', async (req: express.Request, res: express.Response) => {
     let { name, email, password, isGoogleAuth } = req.body;
     try {
         let hash: string = await createHash(password);
@@ -31,7 +32,8 @@ router.post('/', async (req, res) => {
             "name": name,
             "email": email,
             "password": hash,
-            "isGoogleAuth": isGoogleAuth
+            "isGoogleAuth": isGoogleAuth,
+            "workout": []
         }
 
         let newUser = new UserModel(user);
@@ -47,7 +49,8 @@ router.post('/', async (req, res) => {
  * METHOD: GET /:id
  * PURPOSE: Fetch details of user with id
  */
-router.get('/:id', async (req, res) => {
+router.get('/:id', [verifyToken], async (req: express.Request, res: express.Response) => {
+    console.log(req.body);
     let userId = req.params.id;
     try {
         let user: IUser | null = await UserModel.findOne({email: userId});
