@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import IUser from "../database/users/users.type";
 import UserModel from '../database/users/users.model';
 import {createHash, checkPassword} from '../utils/hashing';
+import { ResponseType } from "../types/ResponseType";
 import jwt from 'jsonwebtoken';
 
 let router = express.Router();
@@ -44,7 +45,7 @@ router.post('/userLogin', (req: Request, res: Response) => {
     METHOD: POST
     PURPOSE: user signin
 */
-router.post('/user-signin', async (req, res) => {
+router.post('/user-signin', async (req: Request, res: Response) => {
     let {name, email, password, isGoogleAuth, height = 0, weight = 0, age = 0} = req.body;
     console.log(req.body);
     
