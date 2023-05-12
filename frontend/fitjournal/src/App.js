@@ -1,10 +1,39 @@
 import './App.css';
 
-import LoginForm from './Components/LoginForm/LoginForm';
+import ErrorPage from './ErrorPage';
+import IndexRoute from './routes/IndexRoute';
+import LoginRoute from './routes/LoginRoute';
+import SignupRoute from './routes/SignupRoute';
+
+import {
+  createBrowserRouter,
+  RouterProvider
+} from 'react-router-dom';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <IndexRoute />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: '/sign-up',
+    element: <SignupRoute />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: '/login',
+    element: <LoginRoute />,
+    errorElement: <ErrorPage />
+  }
+]);
 
 function App() {
   return (
-    <LoginForm />
+    <>
+      <h1>NavigationBar</h1>
+      <RouterProvider router = {router} />
+    </>
   );
 }
 

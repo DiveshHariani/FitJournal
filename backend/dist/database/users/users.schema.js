@@ -13,6 +13,7 @@ const userSchema = new mongoose_1.Schema({
     "age": Number,
     "height": Number,
     "weight": Number,
-    "workout": [workout_schema_1.default]
+    "workout": [workout_schema_1.default],
+    "displayImageURL": String
 });
 exports.default = userSchema;

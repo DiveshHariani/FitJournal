@@ -8,7 +8,8 @@ export interface IUser {
     "age"?: Number,
     "height"?: Number,
     "weight"?: Number,
-    "workout": IWorkout[] | []
+    "workout": IWorkout[] | [],
+    "displayImageURL"?: string
 };
 
 export default IUser;

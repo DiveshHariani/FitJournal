@@ -5,7 +5,7 @@ export const createHash = async (password: string): Promise<string> => {
     let passwordHash: string;
     
     const passwordPromise = new Promise<string>((resolve, reject) => {
-        bcrypt.genSalt(saltRounds, (err: Error, salt: string) => {
+        bcrypt.genSalt(saltRounds, (err: Error | undefined, salt: string) => {
             if(err) reject(err);
             bcrypt.hash(password, salt, (err, hash) => {
                 if(!err) {

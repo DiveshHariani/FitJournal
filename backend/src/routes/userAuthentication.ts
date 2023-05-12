@@ -45,7 +45,7 @@ router.post('/userLogin', (req: Request, res: Response) => {
     PURPOSE: user signin
 */
 router.post('/user-signin', async (req, res) => {
-    let {name, email, password, isGoogleAuth} = req.body;
+    let {name, email, password, isGoogleAuth, height = 0, weight = 0, age = 0} = req.body;
     console.log(req.body);
     
     try {
@@ -56,6 +56,9 @@ router.post('/user-signin', async (req, res) => {
             "email": email,
             "password": hash,
             "isGoogleAuth": isGoogleAuth,
+            "height": height,
+            "weight": weight,
+            "age": age,
             "workout": []
         }
 
@@ -63,11 +66,10 @@ router.post('/user-signin', async (req, res) => {
         newUser.save()
             .then((result) => {
                 console.log("Data Saved Successfully");
-                res.send("User has been logged in");
+                res.json({"RESULT_CODE": 0, "MSG": "Login Successful"});
             })
             .catch((err) => {
-                console.log(err);
-                res.send("Unsuccessfull login");
+                res.json({"RESULT_CODE": -1, "MSG": err.message});
             });
 
     } catch(err) {

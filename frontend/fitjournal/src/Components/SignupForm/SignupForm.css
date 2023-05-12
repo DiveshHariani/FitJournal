@@ -1,0 +1,20 @@
+.signup_form_container {
+    margin-top: 5%;
+    width: 50%;
+}
+
+input:invalid {
+    border: 2px solid red;
+}
+
+#signup_form_signup-btn {
+    width: 40%
+}
+
+input[name=pwd] + .password-validation {
+    display: none;
+}
+
+input[name=pwd]:focus + .password-validation {
+    display: block;
+}

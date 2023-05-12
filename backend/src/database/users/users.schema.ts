@@ -10,7 +10,8 @@ const userSchema = new Schema({
     "age": Number,
     "height": Number,
     "weight": Number,
-    "workout": [WorkoutSchema]
+    "workout": [WorkoutSchema],
+    "displayImageURL": String
 });
 
 export default userSchema;

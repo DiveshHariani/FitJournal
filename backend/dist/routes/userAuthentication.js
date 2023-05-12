@@ -54,7 +54,7 @@ router.post('/userLogin', (req, res) => {
     PURPOSE: user signin
 */
 router.post('/user-signin', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let { name, email, password, isGoogleAuth } = req.body;
+    let { name, email, password, isGoogleAuth, height = 0, weight = 0, age = 0 } = req.body;
     console.log(req.body);
     try {
         let hash = yield (0, hashing_1.createHash)(password);
@@ -63,17 +63,19 @@ router.post('/user-signin', (req, res) => __awaiter(void 0, void 0, void 0, func
             "email": email,
             "password": hash,
             "isGoogleAuth": isGoogleAuth,
+            "height": height,
+            "weight": weight,
+            "age": age,
             "workout": []
         };
         let newUser = new users_model_1.default(user);
         newUser.save()
             .then((result) => {
             console.log("Data Saved Successfully");
-            res.send("User has been logged in");
+            res.json({ "RESULT_CODE": 0, "MSG": "Login Successful" });
         })
             .catch((err) => {
-            console.log(err);
-            res.send("Unsuccessfull login");
+            res.json({ "RESULT_CODE": -1, "MSG": err.message });
         });
     }
     catch (err) {
