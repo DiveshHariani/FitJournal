@@ -1,9 +1,10 @@
-import express, { Request, Response } from "express";
+import express, { Application, Request, Response } from "express";
 import IUser from "../database/users/users.type";
 import UserModel from '../database/users/users.model';
 import {createHash, checkPassword} from '../utils/hashing';
-import { ResponseType } from "../types/ResponseType";
+import { ResponseType } from "../types/ResponseType.type";
 import jwt from 'jsonwebtoken';
+import JSONResponse from "../types/JSONResponse.type";
 
 let router = express.Router();
 
@@ -17,7 +18,7 @@ let router = express.Router();
  * Method: POST
  * PURPOSE: user login.
  */
-router.post('/userLogin', (req: Request, res: Response) => {
+router.post('/userLogin', (req: Request, res: ResponseType<JSONResponse>) => {
     let { email, password } = req.body;
     UserModel.findOne({email: email}, {password : 1})
     .then(async (result_hash) => {
@@ -28,9 +29,9 @@ router.post('/userLogin', (req: Request, res: Response) => {
                 console.log("Token: ", process.env.JWT_TOKEN)
                 if(process.env.JWT_TOKEN !== undefined) {
                     let token: string = jwt.sign({user_id: result_hash?._id, email: email}, process.env.JWT_TOKEN);
-                    res.send({"message": "Login successful", "token": token});
+                    res.json({"RESULT_CODE": 0, "RESULT_MSG": "Login successful", "RESULT_DATA": {"token": token}});
                 } else {
-                    res.status(500).json({"Message": "Internal Server Error"});
+                    res.status(500).json({"RESULT_CODE": -1, "RESULT_MSG": "Internal Server Error"});
                 }
             }
             else res.send("Incorrect");
