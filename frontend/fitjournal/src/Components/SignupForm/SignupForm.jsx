@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './SignupForm.css'
 import { passwordValidation } from '../../Utils/PasswordValidation';
+import { useDispatch } from "react-redux";
 
 const SignupForm = () => {
+    const userDispatch = useDispatch();
     const navigate = useNavigate();
 
     const [name, setName] = useState("");
@@ -42,7 +44,7 @@ const SignupForm = () => {
         } else {
             setFocusOnConfirmPassword(false);
         }
-    }, [confirmPassword])
+    }, [confirmPassword, password])
 
     const submitSignUp = async (e) => {
         e.preventDefault();
@@ -68,6 +70,7 @@ const SignupForm = () => {
             if(jsonResult.RESULT_CODE === 0) {
                 let token = jsonResult.RESULT_DATA.token;
                 console.log(token);
+                userDispatch({type: 'user/login', payload: token});
                 navigate('/');
             } else {
                 console.log(jsonResult.RESULT_CODE, "ERROR");
