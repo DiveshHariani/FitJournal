@@ -20,6 +20,7 @@ let router = express.Router();
  */
 router.post('/userLogin', (req: Request, res: ResponseType<JSONResponse>) => {
     let { email, password } = req.body;
+    
     UserModel.findOne({email: email}, {password : 1})
     .then(async (result_hash) => {
         console.log(result_hash);
@@ -38,7 +39,6 @@ router.post('/userLogin', (req: Request, res: ResponseType<JSONResponse>) => {
         }
     })
     .catch((err) => res.send(err));
-    
 });
 
 
@@ -46,7 +46,7 @@ router.post('/userLogin', (req: Request, res: ResponseType<JSONResponse>) => {
     METHOD: POST
     PURPOSE: user signin
 */
-router.post('/user-signin', async (req: Request, res: Response) => {
+router.post('/user-signin', async (req: Request, res: ResponseType<JSONResponse>) => {
     let {name, email, password, isGoogleAuth, height = 0, weight = 0, age = 0} = req.body;
     console.log(req.body);
     
@@ -67,11 +67,17 @@ router.post('/user-signin', async (req: Request, res: Response) => {
         let newUser = new UserModel(user);
         newUser.save()
             .then((result) => {
-                console.log("Data Saved Successfully");
-                res.json({"RESULT_CODE": 0, "MSG": "Login Successful"});
+                console.log(result);
+                let user_id = result._id;
+                if(process.env.JWT_TOKEN) {
+                    let token = jwt.sign({user_id: user_id, email: email}, process.env.JWT_TOKEN)
+                    res.json({"RESULT_CODE": 0, "RESULT_MSG": "Login Successful", "RESULT_DATA": {"token": token}});
+                } else {
+                    res.json({"RESULT_CODE": -1, "RESULT_MSG": "Internal Server Error"})
+                }
             })
             .catch((err) => {
-                res.json({"RESULT_CODE": -1, "MSG": err.message});
+                res.json({"RESULT_CODE": -1, "RESULT_MSG": err.message});
             });
 
     } catch(err) {

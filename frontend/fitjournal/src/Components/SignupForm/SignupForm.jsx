@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import './SignupForm.css'
+import { passwordValidation } from '../../Utils/PasswordValidation';
 
 const SignupForm = () => {
+    const navigate = useNavigate();
+
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -15,6 +19,30 @@ const SignupForm = () => {
     const [containsSpecialChar, setContainsSpecialChar] = useState(false);
     const [containsNumber, setContainsNumber] = useState(false);
     const [containsChar, setContainsChar] = useState(false);
+
+    const [passwordMatch, setPasswordMatch] = useState(false);
+    const [focusOnConfirmPassword, setFocusOnConfirmPassword] = useState(false);
+
+    useEffect(() => {
+        let {isLongEnough: lengthValidation, 
+            containsSpecialChar: specialCharValidation, 
+            containsNumber: numberValidation, 
+            containsChar: charValidation} = passwordValidation(password);
+        
+        setIsLongEnough(lengthValidation);
+        setContainsSpecialChar(specialCharValidation);
+        setContainsNumber(numberValidation);
+        setContainsChar(charValidation);
+    }, [password])
+
+    useEffect(() => {
+        if(confirmPassword.length > 0) {
+            setFocusOnConfirmPassword(true);
+            setPasswordMatch(confirmPassword === password);
+        } else {
+            setFocusOnConfirmPassword(false);
+        }
+    }, [confirmPassword])
 
     const submitSignUp = async (e) => {
         e.preventDefault();
@@ -37,8 +65,13 @@ const SignupForm = () => {
             });
             let jsonResult = await result.json();
             console.log(jsonResult);
-            if(jsonResult.RESULT_CODE == 0) console.log("Sign Up successful");
-            else console.log("Error")
+            if(jsonResult.RESULT_CODE === 0) {
+                let token = jsonResult.RESULT_DATA.token;
+                console.log(token);
+                navigate('/');
+            } else {
+                console.log(jsonResult.RESULT_CODE, "ERROR");
+            }
         } else {
             console.log("Password Mismatch")
         }
@@ -73,14 +106,14 @@ const SignupForm = () => {
                     id="signup_form_pwd"
                     value={password}
                     onChange = {(e) => setPassword(e.target.value)} />
-                {/* <div className="container password-validation">
+                <div className="container password-validation">
                     <ul>
                         <li style={isLongEnough ? {color: "green"} : {color: "red"}}>Must have atleast 8 characters</li>
-                        <li>Must contain one special character from !, @, #, $, %</li>
-                        <li>Must contain atleast one number</li>
-                        <li>Must contain atlease one character</li>
+                        <li style={containsSpecialChar ? {color: "green"} : {color: "red"}}>Must contain one special character from !, @, #, $, %</li>
+                        <li style={containsNumber ? {color: "green"} : {color: "red"}}>Must contain atleast one number</li>
+                        <li style={containsChar ? {color: "green"} : {color: "red"}}>Must contain atlease one character</li>
                     </ul>
-                </div> */}
+                </div>
 
                 <input 
                     className="form-control my-3" 
@@ -89,6 +122,7 @@ const SignupForm = () => {
                     name="pwd-reconfirm" 
                     id="signup_form_pwd-reconfirm"
                     value={confirmPassword}
+                    style = {focusOnConfirmPassword ? {border: passwordMatch ? '2px solid green' : '2px solid red'} : {}}
                     onChange = {(e) => setConfirmPassword(e.target.value)} />
 
                 <div className="row my-3">

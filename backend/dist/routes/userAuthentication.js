@@ -37,10 +37,10 @@ router.post('/userLogin', (req, res) => {
                 console.log("Token: ", process.env.JWT_TOKEN);
                 if (process.env.JWT_TOKEN !== undefined) {
                     let token = jsonwebtoken_1.default.sign({ user_id: result_hash === null || result_hash === void 0 ? void 0 : result_hash._id, email: email }, process.env.JWT_TOKEN);
-                    res.send({ "message": "Login successful", "token": token });
+                    res.json({ "RESULT_CODE": 0, "RESULT_MSG": "Login successful", "RESULT_DATA": { "token": token } });
                 }
                 else {
-                    res.status(500).json({ "Message": "Internal Server Error" });
+                    res.status(500).json({ "RESULT_CODE": -1, "RESULT_MSG": "Internal Server Error" });
                 }
             }
             else
@@ -71,11 +71,18 @@ router.post('/user-signin', (req, res) => __awaiter(void 0, void 0, void 0, func
         let newUser = new users_model_1.default(user);
         newUser.save()
             .then((result) => {
-            console.log("Data Saved Successfully");
-            res.json({ "RESULT_CODE": 0, "MSG": "Login Successful" });
+            console.log(result);
+            let user_id = result._id;
+            if (process.env.JWT_TOKEN) {
+                let token = jsonwebtoken_1.default.sign({ user_id: user_id, email: email }, process.env.JWT_TOKEN);
+                res.json({ "RESULT_CODE": 0, "RESULT_MSG": "Login Successful", "RESULT_DATA": { "token": token } });
+            }
+            else {
+                res.json({ "RESULT_CODE": -1, "RESULT_MSG": "Internal Server Error" });
+            }
         })
             .catch((err) => {
-            res.json({ "RESULT_CODE": -1, "MSG": err.message });
+            res.json({ "RESULT_CODE": -1, "RESULT_MSG": err.message });
         });
     }
     catch (err) {
