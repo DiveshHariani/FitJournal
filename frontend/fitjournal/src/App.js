@@ -4,6 +4,7 @@ import ErrorPage from './ErrorPage';
 import IndexRoute from './routes/IndexRoute';
 import LoginRoute from './routes/LoginRoute';
 import SignupRoute from './routes/SignupRoute';
+import WorkoutRoute from './routes/WorkoutRoute';
 
 import {
   createBrowserRouter,
@@ -24,6 +25,11 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: <LoginRoute />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: '/workout',
+    element: <WorkoutRoute />,
     errorElement: <ErrorPage />
   }
 ]);
