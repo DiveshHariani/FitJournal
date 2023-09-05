@@ -36,4 +36,4 @@ jobs:
         if: always()
         run: |
           mkdir -p $GITHUB_WORKSPACE/build
-          mv $RUNNER_TEMP/build-artifact $GITHUB_WORKSPACE/build
+          mv ${{ github.workspace }}/build-artifact $GITHUB_WORKSPACE/build
