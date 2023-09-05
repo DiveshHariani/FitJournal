@@ -30,10 +30,10 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-artifact
-          path: ./frontend/fitjournal/dist
+          path: ./frontend/fitjournal/build
 
       - name: Save Build Artifacts
         if: always()
         run: |
           mkdir -p $GITHUB_WORKSPACE/build
-          mv $RUNNER_TEMP/build-artifact $GITHUB_WORKSPACE/dist
+          mv $RUNNER_TEMP/build-artifact $GITHUB_WORKSPACE/build
