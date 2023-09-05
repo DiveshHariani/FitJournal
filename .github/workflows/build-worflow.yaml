@@ -1,10 +1,14 @@
-name: React Build Workflow
+name: Build React App
 
-on: [push]
+on:
+  push:
+    branches:
+      - main  # Replace with your desired branch
 
 jobs:
-  build-react:
+  build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -12,12 +16,24 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14"
+          node-version: "16"
 
       - name: Install dependencies
         run: npm install
         working-directory: ./frontend/fitjournal
 
-      - name: Run build
+      - name: Build React App
         run: npm run build
         working-directory: ./frontend/fitjournal
+
+      - name: Deploy Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifact
+          path: ./frontend/fitjournal/dist
+
+      - name: Save Build Artifacts
+        if: always()
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/build
+          mv $RUNNER_TEMP/build-artifact $GITHUB_WORKSPACE/dist
