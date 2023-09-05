@@ -1,17 +1,23 @@
-name: react-build-workflow
-run-name: ${{ github.actor }} is building react
+name: React Build Workflow
+
 on: [push]
+
 jobs:
   build-react:
     runs-on: ubuntu-latest
     steps:
-      - uses: @actions/checkout@v3
-      - uses: @actions/node-setup@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
           node-version: "14"
-      - name: Move to Directory
-        run: cd ./frontend/fitjournal
+
       - name: Install dependencies
         run: npm install
+        working-directory: ./frontend/fitjournal
+
       - name: Run build
         run: npm run build
+        working-directory: ./frontend/fitjournal
